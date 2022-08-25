@@ -28,7 +28,11 @@ object AttemptFinal:
         case "+" => processTopElements(_ + _)
         case "-" => processTopElements(_ - _)
         case "*" => processTopElements(_ * _)
-        case x   => EState.fromOption(x.toIntOption).orElseFail(s"Invalid operand: $x").flatMap(push)
+        case x   =>
+          EState
+            .fromOption(x.toIntOption)
+            .flatMap(push)
+            .orElseFail(s"Invalid operand: $x")
 
     def processTopElements(operator: (Int, Int) => Int): Eff[Unit] =
       for
@@ -38,6 +42,11 @@ object AttemptFinal:
       yield ()
 
     // Here we use 'forEach' from the ForEach Typeclass
-    (elements.forEach(processElement) *> pop).provideState(List.empty[Int]).runEither
+    elements
+      .forEach(processElement)
+      .zipRight(pop)
+      .provideState(List.empty[Int])
+      .runEither
 
-  def run = evalRPNExpression(getExprElements("1 2 + 3 *"))
+  def run: Either[String, Int] =
+    evalRPNExpression(getExprElements("1 2 + 3 *"))
