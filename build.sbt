@@ -8,6 +8,6 @@ lazy val root = project
     scalaVersion := scala3Version,
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-effect" % "3.3.14",
-      "dev.zio"       %% "zio-prelude" % "1.0.0-RC15"
+      "dev.zio"       %% "zio-prelude" % "1.0.0-RC16"
     )
   )
